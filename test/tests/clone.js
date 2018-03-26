@@ -64,6 +64,9 @@ describe("Clone", function() {
     var opts = {
       fetchOpts: {
         callbacks: {
+          certificateCheck: function() {
+            return 1;
+          },
           transferProgress: function(progress) {
             progressCount++;
           }
@@ -105,6 +108,9 @@ describe("Clone", function() {
     var opts = {
         fetchOpts: {
           callbacks: {
+            certificateCheck: function() {
+              return 1;
+            },
             transferProgress: function(progress) {
               lastInvocation = updateProgressIntervals(progressIntervals,
                 lastInvocation);
@@ -141,6 +147,9 @@ describe("Clone", function() {
     var opts = {
         fetchOpts: {
           callbacks: {
+            certificateCheck: function() {
+              return 1;
+            },
             transferProgress: {
               throttle: 50,
               callback: function(progress) {
@@ -174,6 +183,9 @@ describe("Clone", function() {
     var opts = {
         fetchOpts: {
           callbacks: {
+            certificateCheck: function() {
+              return 1;
+            },
             transferProgress: {
               waitForResult: false,
               callback: function(progress) {

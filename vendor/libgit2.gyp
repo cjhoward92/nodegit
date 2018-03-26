@@ -20,7 +20,7 @@
         "LIBGIT2_NO_FEATURES_H",
         # Node's util.h may be accidentally included so use this to guard
         # against compilation error.
-        "SRC_UTIL_H_",
+        "SRC_UTIL_H_"
       ],
       "dependencies": [
         "zlib",
@@ -314,7 +314,6 @@
         ["OS=='linux' or OS.endswith('bsd')" , {
           "cflags": [
             "-DGIT_SSH",
-            "-DGIT_SSL",
             "-w",
           ],
           "defines": [
@@ -324,7 +323,7 @@
         }],
         ["OS=='win'", {
           "defines": [
-            "GIT_WINHTTP",
+            "GIT_OPENSSL",
             "GIT_SHA1_WIN32"
           ],
           "msvs_settings": {
@@ -349,7 +348,7 @@
                   ],
                 },
               }],
-            ],
+            ]
           },
           "msvs_disabled_warnings": [
             # Conversion from 'ssize_t' to 'int32_t', possible loss of data.
@@ -367,10 +366,11 @@
             "libgit2/deps/regex"
           ],
           "sources": [
+            "libgit2/src/tls_stream.c",
+            "libgit2/src/tls_stream.h",
             "libgit2/deps/regex/regex.c",
             "libgit2/src/hash/hash_win32.c",
             "libgit2/src/hash/hash_win32.h",
-            "libgit2/src/transports/winhttp.c",
             "libgit2/src/win32/dir.c",
             "libgit2/src/win32/dir.h",
             "libgit2/src/win32/error.c",
@@ -481,16 +481,20 @@
     },
     {
       "target_name": "libssh2_configure",
-      "type": "none",
-      "toolsets": ["host"],
-      "actions": [
-        {
-          "action_name": "configure",
-          "inputs": ["configureLibssh2.js"],
-          "outputs": ["libssh2/configured"],
-          "action": ["node", "configureLibssh2.js", "<(node_root_dir)/deps/openssl/openssl"]
-        }
-      ],
+      "conditions": [
+        ["OS=='mac' or OS=='linux' or OS.endswith('bsd')", {
+          "type": "none",
+          "toolsets": ["host"],
+          "actions": [
+            {
+              "action_name": "configure",
+              "inputs": ["configureLibssh2.js"],
+              "outputs": ["libssh2/configured"],
+              "action": ["node", "configureLibssh2.js", "<(node_root_dir)/deps/openssl/openssl"]
+            }
+          ]
+        }]
+      ]
     },
     {
       "target_name": "libssh2",
@@ -544,6 +548,10 @@
           ],
           "defines!": [
             "HAVE_POLL"
+          ],
+          "defines": [
+            "OPENSSL_NO_RIPEMD",
+            "OPENSSL_NO_CAST"
           ],
           "direct_dependent_settings": {
             "include_dirs": [

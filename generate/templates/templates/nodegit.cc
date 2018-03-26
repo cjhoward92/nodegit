@@ -105,10 +105,6 @@ void OpenSSL_LockingCallback(int mode, int type, const char *, int) {
   }
 }
 
-unsigned long OpenSSL_IDCallback() {
-  return (unsigned long)uv_thread_self();
-}
-
 void OpenSSL_ThreadSetup() {
   opensslMutexes=(uv_mutex_t *)malloc(CRYPTO_num_locks() * sizeof(uv_mutex_t));
 
@@ -117,7 +113,6 @@ void OpenSSL_ThreadSetup() {
   }
 
   CRYPTO_set_locking_callback(OpenSSL_LockingCallback);
-  CRYPTO_set_id_callback(OpenSSL_IDCallback);
 }
 
 ThreadPool libgit2ThreadPool(10, uv_default_loop());

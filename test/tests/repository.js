@@ -176,8 +176,10 @@ describe("Repository", function() {
       credentials: function(url, userName) {
         return NodeGit.Cred.sshKeyFromAgent(userName);
       },
-      certificateCheck: function() {
-        return 1;
+      callbacks: {
+        certificateCheck: function() {
+          return 1;
+        }
       }
     })
     .then(function() {

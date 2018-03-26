@@ -115,6 +115,13 @@ describe("Submodule", function() {
 
     var submodule;
     var submoduleRepo;
+    var opts = {
+      callbacks: {
+        certificateCheck: function() {
+          return 1;
+        }
+      }
+    };
 
     return NodeGit.Submodule.addSetup(repo, submoduleUrl, submodulePath, 0)
       .then(function(_submodule) {
@@ -127,7 +134,7 @@ describe("Submodule", function() {
       })
       .then(function(_submoduleRepo) {
         submoduleRepo = _submoduleRepo;
-        return submoduleRepo.fetch("origin", null, null);
+        return submoduleRepo.fetch("origin", opts, null);
       })
       .then(function() {
         return submoduleRepo.getReference("origin/master");

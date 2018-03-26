@@ -498,12 +498,19 @@ describe("Remote", function() {
         symrefTarget: null
       }
     };
+    var opts = {
+      callbacks: {
+        certificateCheck: function() {
+          return 1;
+        }
+      }
+    };
 
-    return this.repository.getRemote("origin")
+    return this.repository.getRemote("origin", opts)
       .then(function(remote) {
         return Promise.all([
           remote,
-          remote.connect(NodeGit.Enums.DIRECTION.FETCH)
+          remote.connect(NodeGit.Enums.DIRECTION.FETCH, opts.callbacks)
         ]);
       })
       .then(function(results) {
